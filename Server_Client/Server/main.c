@@ -56,22 +56,22 @@
 //                    
 // HELP:             --> Give above explanation.
 //
-// ECHO:              on/off (on = server send back received chars as feedback) 
-//                           (off= server will not send back received chars as feedback).
+// ECHO:              on/off off(0)(default) = server will not send back received chars as feedback.
+//                           on(1)           = server send back received chars as feedback 
+//                           
+// CR:                on/off  off(0)(default)= dont show non printable chars, skip <CR><LF>.
+//                            on(1)          = show all recevied characters include <CR><LF>.
 // BYE:               leave without notice to anyone.
 // EXIT:              inform every one you are going to leave, then leave.
 // ERASE:             ERASE the registered clients list (everybody need to NAME again!!)
 //
 //
-// compile use sygwin gcc compiler
-//$cd C:/mydata/Tsviel/Projects/Chat/05_Server_and_Client_2017_04_10/Server/
-//$gcc -o server server.c
 //
 //
 //
-//$ cd C:\mydata\Tsviel\Projects\Chat\06_Server_and_Client\Server
-//$ make
+//$ cd cd C:\\MyData\\Server_Client\\Server
 //$ make clean
+//$ make
 //
 //$./server.exe PORT_NUM    (if the parameter is missing it will use 8888 as PORT_NUM)
 //$./server.exe 7777
@@ -501,7 +501,7 @@ int main(int argc , char *argv[])
                                 // 1. HELP:
                                 // 2. LIST:            (Show registered client name in a list)
                                 // 3. ECHO:on/off 
-								//    CR:on/off
+                                //    CR:on/off
                                 // 4. BYE:
                                 // 5. EXIT:
                                 // 6. ALL:message      (Broadcast to all registered clients)
@@ -559,8 +559,7 @@ int main(int argc , char *argv[])
                                     }
                                 }//End else if if (CompareIgnoreCase(msgs[i], "ECHO:") == 0)
                                 
-                                
-								
+				
                                 //////////////////////
                                 // Handle CR:on/off //
                                 //////////////////////
@@ -581,16 +580,16 @@ int main(int argc , char *argv[])
                                         if (CompareIgnoreCase(cr_off, "on") == 0)
                                         {
                                             client_cr[i] = 1;
-											printf("client %d cr is on(1)\r\n",i);
+                                            printf("client %d cr is on(1)\r\n",i);
                                         }
                                         
                                         if (CompareIgnoreCase(cr_off, "off") == 0)
                                         {
                                             client_cr[i] = 0;
-											printf("client %d cr is off(0)\r\n",i);
+                                            printf("client %d cr is off(0)\r\n",i);
                                         }
                                     }
-                                }//End else if if (CompareIgnoreCase(msgs[i], "ECHO:") == 0)								
+                                }//End else if if (CompareIgnoreCase(msgs[i], "CR:") == 0)								
 								
 
                                 ////////////////////////
@@ -920,6 +919,7 @@ int main(int argc , char *argv[])
                                 // 1. HELP:
                                 // 2. LIST:            (Show registered client name in a list)
                                 // 3. ECHO:on/off 
+                                //    CR:on/off
                                 // 4. BYE:
                                 // 5. EXIT:
                                 // 6. ALL:message      (Broadcast to all registered clients)
@@ -975,7 +975,38 @@ int main(int argc , char *argv[])
                                     }
                                 }//End else if if (CompareIgnoreCase(msgs[i], "ECHO:") == 0)
                                 
-                                
+                                //////////////////////
+                                // Handle CR:on/off //
+                                //////////////////////
+                                else if (CompareIgnoreCase(msgs[i], "CR:") == 0)
+                                {
+                                    int ln;
+                                    ln = strlen(msgs[i]);
+                                    char cr_off[3];
+                                    //printf("CR: command length=%d\n", ln);
+                                    if (ln >= 5)
+                                    {
+                                        //Extract the "on"/"off" parameter from the message.
+                                        for (int r=0; r<(ln-3); r++)
+                                        {
+                                            cr_off[r] = msgs[i][r+3];
+                                        }//End for (int r=0; r<(ln-5); r++)
+                                        
+                                        if (CompareIgnoreCase(cr_off, "on") == 0)
+                                        {
+                                            client_cr[i] = 1;
+                                            printf("client %d cr is on(1)\r\n",i);
+                                        }
+                                        
+                                        if (CompareIgnoreCase(cr_off, "off") == 0)
+                                        {
+                                            client_cr[i] = 0;
+                                            printf("client %d cr is off(0)\r\n",i);
+                                        }
+                                    }
+                                }//End else if if (CompareIgnoreCase(msgs[i], "CR:") == 0)
+				    
+				    
                                 ////////////////////////
                                 // Handle BYE:        //
                                 ////////////////////////
